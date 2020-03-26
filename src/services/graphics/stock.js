@@ -6,7 +6,6 @@ const colorsMulti= ["rgb(46,204,113)", "rgb(231,76,60)", "rgb(52,152,219)"];
 const draw_line_graph = (array, container, width = 364, height = 354) => {
     // console.log(array);
     // Finding MAX and MIN values for multi-line graphs
-    console.log(array);
     let xArray = [];
     let yArray = [];
 

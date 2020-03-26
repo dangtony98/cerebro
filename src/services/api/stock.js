@@ -12,10 +12,6 @@ const getStockQuote = async (ticker) => {
     return await axios.get(`https://financialmodelingprep.com/api/v3/quote/${ticker}`)
 }
 
-const getStockTicker = async (ticker) => {
-    return await axios.get(`https://financialmodelingprep.com/api/v3/quote/${ticker}`)
-}
-
 const getNYSEMarketHours = async () => {
     return await axios.get(`https://financialmodelingprep.com/api/v3/is-the-market-open`)
 }  
@@ -59,7 +55,6 @@ const getBalanceSheetQuarter = async (ticker) => {
 export { 
     getStockProfile,
     getStockQuote,
-    getStockTicker,
     getStockList, 
     getNYSEMarketHours,
     getStockHistoryLive,

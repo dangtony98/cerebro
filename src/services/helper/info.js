@@ -9,7 +9,6 @@ import {
     getBalanceSheetAnnual,
     getBalanceSheetQuarter,
     getStockQuote,
-    getStockTicker
 } from '../api/stock';
 
 import { getSectorPerformance } from '../api/market';
@@ -26,7 +25,6 @@ ticker: the stock's ticker symbol.
 const getStockInfo = async (ticker) => {
     const profile = await getStockProfile(ticker);
     const quote = await getStockQuote(ticker);
-    const tickerInfo = await getStockTicker(ticker);
     const stockHistoryHourly = await getStockHistoryHourly(ticker);
     const stockHistory = await getStockHistory(ticker);
     const dCF = await getDCF(ticker);
