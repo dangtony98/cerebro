@@ -1,19 +1,9 @@
 @import './base/base';
 @import './base/variables';
-@import './base/typography';
 
 @import './mixins/mixins';
 
-@import './layouts/layouts';
-@import './layouts/utilities';
+@import './base/typography';
+@import './base/utilities';
 
-@import './components/pages/pages';
-
-@import './components/generic/icon';
-@import './components/generic/element';
-@import './components/generic/section';
-@import './components/generic/image';
-@import './components/generic/input';
-@import './components/generic/hr';
-@import './components/generic/span';
-@import './components/generic/table';
+@import './animations/animations';
