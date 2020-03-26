@@ -38,7 +38,6 @@ const getStockInfo = async (ticker) => {
     let stockInfo = await {
         profile: profile.data.profile,
         quote: quote.data[0],
-        tickerInfo: tickerInfo.data[0],
         financialRatios: financialRatios.data.ratios,
         dCF: dCF.data,
         stockHistoryHourly: stock_history_reformat(stockHistoryHourly.data.reverse()),
