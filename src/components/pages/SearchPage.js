@@ -43,7 +43,7 @@ export default class SearchPage extends Component {
                 <div 
                     id="search-frame"
                 >
-                    <div className="layout-col-8 marg-c marg-t-sm layout-flex layout-flex--center">
+                    <div className="section layout-col-8 marg-c layout-flex layout-flex--center">
                         <h3 className="marg-r-m">CEREBRO</h3>
                         <input
                             onKeyPress={this.handleKeyDown}

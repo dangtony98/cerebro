@@ -25,12 +25,11 @@ export default class StockBalance extends Component {
             
             for (let i = 0; i < metricsToShow.length; i++) {
                 const stockMetricWindow = stock_history_window(balanceSheets[0], metricsToShow[i]);
-                const { label, metric, startDatum, endDatum, container } = stockMetricWindow;
+                const { label, metric, container } = stockMetricWindow;
 
                 stateObject[metric] = {
                     metric,
                     selectedPeriod: label,
-                    window:`${moment(startDatum.date).format('l')} - ${moment(endDatum.date).format('l')}`,
                     container: container
                 }
                 stockMetricWindows.push(stockMetricWindow);
@@ -125,9 +124,8 @@ export default class StockBalance extends Component {
                                                 })}
                                             </div> 
                                         </div>
-                                        <p className="marg-b-xs">{window}</p>
                                         <div 
-                                            className={container.slice(1)}
+                                            className={`${container.slice(1)} marg-b-sm`}
                                         />
                                     </div>
                                 )

@@ -68,13 +68,14 @@ export default class StockQuote extends Component {
     }
 
     render() {
-        const { selectedPeriod, window } = this.state;
-        const { profile, quote, financialRatios, stockHistories } = this.props.stockInfo; 
+        const { selectedPeriod } = this.state;
+        const { profile, quote, financialRatios, stockHistories, dCF } = this.props.stockInfo; 
         const { companyName, price, changesPercentage, beta, image } = profile;
         const { 
             exhange, symbol, marketCap, pe, eps, open, previousClose, 
             dayLow, dayHigh, yearLow, yearHigh, sharesOutstanding 
         } = quote;
+        const { dcf } = dCF;
 
         return (
             <div 
@@ -103,6 +104,7 @@ export default class StockQuote extends Component {
                         <p>P/E: <strong>{pe ? decimalReformat(pe) : "N/A"}</strong></p>
                         <p>EPS: <strong>{eps ? decimalReformat(eps) : "N/A"}</strong></p>
                         <p>Div Yield: <strong>{financialRatios ? textToPercentageReformat(financialRatios[0].investmentValuationRatios.dividendYield) : "N/A"}</strong></p>
+                        <p>Intrinsic Value: <strong>{dcf ? decimalReformat(dcf) : "N/A"}</strong></p>
                         <hr className="marg-t-xs marg-b-xs" />
                         <p>Open: <strong>{open}</strong></p>
                         <p>Prev Close: <strong>{previousClose}</strong></p>
@@ -126,7 +128,7 @@ export default class StockQuote extends Component {
                                 ))}
                             </div>
                         </div>
-                        <p className="marg-b-xs">{window}</p>
+                        {/* <p className="marg-b-xs">{window}</p> */}
                         <div 
                             className="stock-overview-chart-container"
                         />

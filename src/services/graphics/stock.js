@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
+import moment from 'moment';
+import { wholeReformat } from '../helper/metricReformat';
 
 const colorsSingle = ["rgb(46,204,113)", "rgb(231,76,60)"];
 const colorsMulti= ["rgb(46,204,113)", "rgb(231,76,60)", "rgb(52,152,219)"];
 
 const draw_line_graph = (array, container, width = 364, height = 354) => {
-    // console.log(array);
     // Finding MAX and MIN values for multi-line graphs
-    let xArray = [];
-    let yArray = [];
+    let xArray = [], yArray = [];
 
     for (let j = 0; j < array.length; j++) {
         for (let k = 0; k < array[j].data.length; k++) {
@@ -16,14 +16,14 @@ const draw_line_graph = (array, container, width = 364, height = 354) => {
         }
     }
 
-    const largestY = Math.max.apply(Math, yArray);
-    const smallestY = Math.min.apply(Math, yArray);
-    const marginY = Math.abs(largestY) * 0.05;
-    const largestX =  Math.max.apply(Math, xArray);
-    const smallestX =  Math.min.apply(Math, xArray);
+    const largestY = Math.max.apply(Math, yArray),
+          smallestY = Math.min.apply(Math, yArray),
+          marginY = Math.abs(largestY) * 0.05,
+          largestX =  Math.max.apply(Math, xArray),
+          smallestX =  Math.min.apply(Math, xArray);
 
     // Define graph dimensions
-    const margin = { top: 0, right: 75, bottom: 30, left: 75 };
+    const margin = { top: 40, right: 75, bottom: 30, left: 75 };
     // const height = width - margin.bottom - margin.top;
 
     // Define number formating
@@ -63,23 +63,23 @@ const draw_line_graph = (array, container, width = 364, height = 354) => {
     }
 
     // Add X-Axis Grid
-    svg.append("g")			
-      .attr("class", "grid")
-      .attr("stroke","rgba(112, 112, 112)")
-      .attr("transform", "translate(0," + height + ")")
-      .call(make_x_gridlines()
-          .tickSize(-height)
-          .tickFormat("")
-      );
+    // svg.append("g")			
+    //   .attr("class", "grid")
+    //   .attr("stroke","rgba(112, 112, 112)")
+    //   .attr("transform", "translate(0," + height + ")")
+    //   .call(make_x_gridlines()
+    //       .tickSize(-height)
+    //       .tickFormat("")
+    //   );
 
-    // Add Y-Axis Grid
-    svg.append("g")			
-    .attr("class", "grid")
-    .attr("stroke","rgb(112, 112, 112)")
-    .call(make_y_gridlines()
-        .tickSize(-width)
-        .tickFormat("")
-    );
+    // // Add Y-Axis Grid
+    // svg.append("g")			
+    // .attr("class", "grid")
+    // .attr("stroke","rgb(112, 112, 112)")
+    // .call(make_y_gridlines()
+    //     .tickSize(-width)
+    //     .tickFormat("")
+    // );
 
     // Add X-Axis
     svg.append("g")
@@ -92,6 +92,33 @@ const draw_line_graph = (array, container, width = 364, height = 354) => {
         .attr("class", "axis")
         .call(d3.axisLeft(scaleY).tickPadding(20).tickFormat(d3.format(numberFormatYAxis)));
 
+    // Add Rect Overlay to detect Tooltip
+    svg.append("rect")
+        .attr("transform", "translate(0," + margin.top + ")")
+        .attr("class", "graph-overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "transparent")
+        .on("mousemove", mousemove);
+    
+    // Add Circle
+    svg.append("circle")
+        .attr("r", 5)
+        .attr("fill", "transparent");
+    
+    // Add Hover Lines
+    svg.append("line")
+        .attr("class", "x-hover-line hover-line");
+    
+    svg.append("line")
+        .attr("class", "y-hover-line hover-line");
+
+    // Add Datum Text
+    svg.append("text")
+        .attr("class", "graph-label axis")
+        .attr("x", -(margin.left))
+        .attr("y", -(margin.top / 2));
+
     // // Add paths using this helper function
     for (let i = 0; i < array.length; i++) {
         let metric = array[i].metric;
@@ -101,9 +128,10 @@ const draw_line_graph = (array, container, width = 364, height = 354) => {
             .x((d) => { return scaleX(d.date) })
             .y((d) => { return scaleY(d[metric]) })
 
-        const startDatum = array[i].data[0];
-        const endDatum = array[i].data[array[i].data.length - 1];
+        let startDatum = array[i].data[0],
+            endDatum = array[i].data[array[i].data.length - 1];
         let lineColor;
+
         if (array.length > 1) {
             lineColor = colorsMulti[i];
         } else {
@@ -132,6 +160,25 @@ const draw_line_graph = (array, container, width = 364, height = 354) => {
                 .attr("stroke-dashoffset", 0);
         
         path.exit().remove();
+    }
+
+    let bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+    function mousemove() {
+        let x0 = scaleX.invert(d3.mouse(this)[0]), 
+            i = bisectDate(array[0].data, x0),
+            metric = array[0].metric,
+            d0 = array[0].data[i - 1],
+            d1 = array[0].data[i],
+            d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+
+        svg.select(".x-hover-line").attr("y1", 0).attr("y2", height).attr("x1", scaleX(d.date)).attr("x2", scaleX(d.date));
+        svg.select(".y-hover-line").attr("x1", 0).attr("x2", width).attr("y1", scaleY(d[metric])).attr("y2", scaleY(d[metric]));
+        svg.select("circle").attr("cx", scaleX(d.date)).attr("cy", scaleY(d[metric])).attr("fill", "black");
+        svg.select(".graph-label").text(function() { 
+            return `${moment(d.date).format("YYYY-MM-DD")}: ${wholeReformat(d[metric])}`; 
+        });
     }
 }
 

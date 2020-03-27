@@ -1,5 +1,5 @@
-@import './base/base';
 @import './base/variables';
+@import './base/base';
 @import './base/typography';
 
 @import './mixins/mixins';
@@ -17,3 +17,5 @@
 @import './components/generic/hr';
 @import './components/generic/span';
 @import './components/generic/table';
+
+@import './components/graphics/stock';

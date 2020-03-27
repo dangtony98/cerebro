@@ -4,9 +4,6 @@ import { mAverage } from './arrManipulations';
 const stock_info_reformat = (stockInfo) => {
     const { stockHistoryHourly, stockHistory, incomeStatementAnnual, incomeStatementQuarter, balanceSheetAnnual, balanceSheetQuarter } = stockInfo;
     const stockHistoryPeriods = [{
-        label: 'LIVE',
-        period: 0
-    },{
         label: '1D',
         period: 1
     },{

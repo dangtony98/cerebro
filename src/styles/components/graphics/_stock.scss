@@ -1,0 +1,20 @@
+.focus circle {
+fill: #F1F3F3;
+stroke: #6F257F;
+stroke-width: 5px;
+}
+
+.axis { 
+    font: 1.5rem 'Open Sans'; 
+    font-weight: 300;
+}
+
+.graph-overlay {
+    fill: none;
+    pointer-events: all;
+}
+    
+.hover-line {
+    stroke: rgba($color-black, 0.5);
+    stroke-width: 1px;
+}
