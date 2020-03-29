@@ -1,11 +1,22 @@
 .focus circle {
-fill: #F1F3F3;
-stroke: #6F257F;
-stroke-width: 5px;
+    fill: #F1F3F3;
+    stroke: #6F257F;
+    stroke-width: 5px;
+}
+
+.graph-style {
+    font: 1.5rem 'Roboto';
+    &--normal {
+        font-weight: 300;
+    }
+
+    &--bold {
+        font-weight: 700;
+    }
 }
 
 .axis { 
-    font: 1.5rem 'Open Sans'; 
+    font: 1.5rem 'Roboto'; 
     font-weight: 300;
 }
 

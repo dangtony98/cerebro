@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { draw_line_graph } from '../../services/graphics/stock';
 import { stock_history_window } from '../../services/helper/objReformat';
-import { decimalReformat, demicalReformatLarge, textToPercentageReformat, wholeReformat } from '../../services/helper/metricReformat';
+import { decimal_reformat, demicalReformatLarge, textToPercentageReformat, whole_reformat } from '../../services/helper/metricReformat';
 
 const colors = ['rgb(41,128,185)', 'rgb(112, 112, 112)'];
 
@@ -14,7 +14,6 @@ export default class StockQuote extends Component {
 
         this.state = {
             selectedPeriod: '',
-            window: '',
             liveIsActive: false,
             liveData: []
         }
@@ -23,12 +22,11 @@ export default class StockQuote extends Component {
     componentDidMount() {
         const { stockHistories } = this.props.stockInfo;
         const stockPriceWindow = stock_history_window(stockHistories[1], "close");
-        const { label, metric, data, startDatum, changesPercentage } = stockPriceWindow;
+        const { label, metric, data } = stockPriceWindow;
         
         this.setState({
-            selectedPeriod: label,
-            window:`${moment(startDatum.date).format('l')} (${changesPercentage}%)`
-        }, () => draw_line_graph([{ data, metric }], ".stock-overview-chart-container"));
+            selectedPeriod: label
+        }, () => draw_line_graph([{ data, metric }], "stock-overview-chart-container"));
     }
 
     async onChangeChart(option) {
@@ -61,7 +59,7 @@ export default class StockQuote extends Component {
                     selectedPeriod: label,
                     window: (option == '1D' || option == 'LIVE') ? `${moment(startDatum.date).format('l')} (${changesPercentage}%)` : `${moment(startDatum.date).format('l')} - ${moment(endDatum.date).format('l')} (${changesPercentage}%)`,
                     liveIsActive: false
-                }), () => draw_line_graph([{ data, metric }], ".stock-overview-chart-container"));
+                }), () => draw_line_graph([{ data, metric }], "stock-overview-chart-container"));
             }      
         });
         
@@ -80,13 +78,13 @@ export default class StockQuote extends Component {
         return (
             <div 
                 id="section"
-                className="section layout-col-8 marg-c marg-t-sm"
+                className="section layout-col-10 marg-c"
             >
                 <h4>QUOTE</h4>
                 <div className="layout-flex">
                     <div 
                         id="section-half"
-                        className="section-half marg-r-sm"
+                        className="section-half marg-r-m"
                     >
                         <div className="layout-flex layout-flex--center">
                             <img 
@@ -100,17 +98,17 @@ export default class StockQuote extends Component {
                         </div>
                         <hr className="marg-t-xs marg-b-sm" />
                         <p>Market Cap: <strong>{marketCap ? demicalReformatLarge(marketCap) : "N/A"}</strong></p>
-                        <p>Beta: <strong>{decimalReformat(beta)}</strong></p>
-                        <p>P/E: <strong>{pe ? decimalReformat(pe) : "N/A"}</strong></p>
-                        <p>EPS: <strong>{eps ? decimalReformat(eps) : "N/A"}</strong></p>
+                        <p>Beta: <strong>{decimal_reformat(beta)}</strong></p>
+                        <p>P/E: <strong>{pe ? decimal_reformat(pe) : "N/A"}</strong></p>
+                        <p>EPS: <strong>{eps ? decimal_reformat(eps) : "N/A"}</strong></p>
                         <p>Div Yield: <strong>{financialRatios ? textToPercentageReformat(financialRatios[0].investmentValuationRatios.dividendYield) : "N/A"}</strong></p>
-                        <p>Intrinsic Value: <strong>{dcf ? decimalReformat(dcf) : "N/A"}</strong></p>
+                        <p>Intrinsic Value: <strong>{dcf ? decimal_reformat(dcf) : "N/A"}</strong></p>
                         <hr className="marg-t-xs marg-b-xs" />
                         <p>Open: <strong>{open}</strong></p>
                         <p>Prev Close: <strong>{previousClose}</strong></p>
                         <p>1 Day Range: <strong>{`${dayLow} - ${dayHigh}`}</strong></p>
                         <p>52 Week Range: <strong>{`${yearLow} - ${yearHigh}`}</strong></p>
-                        <p>Shares Outstanding: <strong>{`${wholeReformat(sharesOutstanding)}`}</strong></p>
+                        <p>Shares Outstanding: <strong>{`${whole_reformat(sharesOutstanding)}`}</strong></p>
                     </div>
                     <div className="section-half">
                         <div className="layout-flex layout-flex--between">
@@ -128,7 +126,6 @@ export default class StockQuote extends Component {
                                 ))}
                             </div>
                         </div>
-                        {/* <p className="marg-b-xs">{window}</p> */}
                         <div 
                             className="stock-overview-chart-container"
                         />

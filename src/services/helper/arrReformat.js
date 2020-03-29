@@ -40,16 +40,31 @@ const stock_statement_reformat = (arr) => {
     return arr;
 }
 
-const financialGrowthExtract = (arr, metric) => {
-    let financialGrowth = [];
-    for (let i = 0; i < arr.length; i++) {
-        const financialDatum = {
-            date: arr[i].date,
-            [metric]: parseFloat(arr[i][metric])/1000000
+// Assembles the portfolio history for the given stocks
+const portfolio_history_reformat = (portfolio, equityHoldings, cash = 0) => {
+    let stockHistory = [],
+        minHistoryTraceable = Math.min(...equityHoldings.map(stock => stock.stockHistories.find(stockHistory => stockHistory.label == "MAX").data.length));
+
+    for (let j = 0; j  < minHistoryTraceable; j++) {
+        let sum = cash, date;
+        for (let k = 0; k < equityHoldings.length; k++) {
+            const stockHistoryMax = equityHoldings[k].stockHistories.find(stockHistory => stockHistory.label == "MAX").data,
+                  arrStart = stockHistoryMax.length - minHistoryTraceable,
+                  stockHistoryMaxSliced = stockHistoryMax.slice(arrStart);
+                  
+            date = stockHistoryMaxSliced[j].date;
+            sum += (stockHistoryMaxSliced[j].close * portfolio[k].shares);
         }
-        financialGrowth.push(financialDatum);
+
+        stockHistory.push({
+            date,
+            close: sum
+        });
     }
-    return financialGrowth;
+
+    return {
+        stockHistory,
+    }
 }
 
-export { stock_history_reformat, stock_statement_reformat, financialGrowthExtract };
+export { stock_history_reformat, stock_statement_reformat, portfolio_history_reformat };

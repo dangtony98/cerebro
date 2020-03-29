@@ -6,7 +6,7 @@ import StockMomentumm from '../stock/StockMomentum';
 import StockIncome from '../stock/StockIncome';
 import StockBalance from '../stock/StockBalance';
 
-import { getStockInfo } from '../../services/helper/info';
+import { get_stock_info } from '../../services/helper/info';
 
 export default class SearchPage extends Component {
     constructor(props) {
@@ -28,7 +28,7 @@ export default class SearchPage extends Component {
         const stockTicker = e.target.value.toUpperCase();
         if (e.key === 'Enter') {
             this.setState({ ...this.state, loading: true });
-            let stockInfo = await getStockInfo(stockTicker);
+            let stockInfo = await get_stock_info(stockTicker);
             if (stockInfo) {
                 console.log(stockInfo);
                 this.setState({ ...this.state, loading: false, stockInfo });
@@ -39,12 +39,10 @@ export default class SearchPage extends Component {
     render() {
         const { stockInfo, loading } = this.state;
         return (
-            <div className="pages-relative">
-                <div 
-                    id="search-frame"
-                >
-                    <div className="section layout-col-8 marg-c layout-flex layout-flex--center">
-                        <h3 className="marg-r-m">CEREBRO</h3>
+            <div>
+                <div className="section layout-col-10 marg-c marg-t-sm" id="search-box">
+                    <div className="layout-flex layout-flex--center marg-b-sm">
+                        <h3 className="marg-r-m">CEREBRO ANALYSIS</h3>
                         <input
                             onKeyPress={this.handleKeyDown}
                             placeholder="Search"
@@ -52,29 +50,27 @@ export default class SearchPage extends Component {
                         />
                     </div>
                     {loading && (
-                        <div className="marg-t-sm">
-                            <BarLoader
-                                height={2}
-                                width={document.getElementById("search-frame").offsetWidth}
-                                color="rgb(52,152,219)"
-                            />
-                        </div>
-                    )}
-                    {(stockInfo && !loading) && (
-                        <div>
-                            <StockQuote stockInfo={stockInfo} />
-                            <StockProfile stockInfo={stockInfo} />
-                            {stockInfo.incomeStatements[0].data && (
-                                <div>
-                                    <StockMomentumm stockInfo={stockInfo} />
-                                    <StockIncome stockInfo={stockInfo} />
-                                    <StockBalance stockInfo={stockInfo} />
-                                </div>
-                            )}
-                        </div>
+                        <BarLoader
+                            height={2}
+                            width={document.getElementById("search-box").offsetWidth}
+                            color="rgb(52,152,219)"
+                        />
                     )}
                 </div>
-            </div>  
+                {stockInfo && (
+                    <div>
+                        <StockQuote stockInfo={stockInfo} />
+                        <StockProfile stockInfo={stockInfo} />
+                        {stockInfo.incomeStatements[0].data && (
+                            <div>
+                                <StockMomentumm stockInfo={stockInfo} />
+                                <StockIncome stockInfo={stockInfo} />
+                                <StockBalance stockInfo={stockInfo} />
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         );
     }
 }

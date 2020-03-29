@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import numeral from 'numeral';
-import moment from 'moment';
 import { draw_line_graph } from '../../services/graphics/stock';
 import { stock_history_window } from '../../services/helper/objReformat';
 
@@ -21,7 +20,7 @@ export default class StockIncome extends Component {
     componentDidMount() {
         const { incomeStatements } = this.props.stockInfo;
         if (incomeStatements[0].data) {
-            const metricsToShow = ["EPS", "Dividend per Share", "Revenue", "Cost of Revenue", "Operating Expenses", "Net Income", "Gross Margin", "Net Profit Margin", "Free Cash Flow margin"];
+            const metricsToShow = ["EPS", "Dividend per Share", "Revenue", "Cost of Revenue", "Operating Expenses", "Operating Income", "Net Income", "Gross Margin", "Net Profit Margin", "Free Cash Flow margin"];
             let stockMetricWindows = [];
             const stateObject = {};
             
@@ -73,6 +72,7 @@ export default class StockIncome extends Component {
             "Cost of Revenue": cogs, 
             "Gross Profit": grossProfit, 
             "Operating Expenses": opex,
+            "Operating Income": opIncome,
             "Net Income": netIncome,
             "Revenue Growth": revenueGrowth,
             "Gross Margin": grossMargin,
@@ -82,15 +82,16 @@ export default class StockIncome extends Component {
         return (
             <div>
                 {(incomeStatements[0].data && !_.isEmpty(this.state)) && (
-                    <div className="section layout-col-8 marg-c">
+                    <div className="section layout-col-10 marg-c">
                     <h4>INCOME STATEMENT </h4>
                     <div className="layout-flex">
-                        <div className="section-half marg-r-sm">
+                        <div className="section-half marg-r-m">
                             <p>Revenue: <strong>{numeral(parseFloat(revenue).toFixed(4)).format('$0,0.00')}</strong></p>
                             <p>Cost of Revenue: <strong>{numeral(parseFloat(cogs).toFixed(4)).format('$0,0.00')}</strong></p>
                             <p>Gross Profit: <strong>{numeral(parseFloat(grossProfit).toFixed(4)).format('$0,0.00')}</strong></p>
                             <hr className="marg-t-xs marg-b-sm" />
                             <p>Operating Expenses: <strong>{numeral(parseFloat(opex).toFixed(4)).format('$0,0.00')}</strong></p>
+                            <p>Operating Income: <strong>{numeral(parseFloat(opIncome).toFixed(4)).format('$0,0.00')}</strong></p>
                             <p>Net Income: <strong>{numeral(parseFloat(netIncome).toFixed(4)).format('$0,0.00')}</strong></p>
                             <hr className="marg-t-xs marg-b-sm" />
                             <p>Revenue Growth: <strong>{numeral(parseFloat(revenueGrowth).toFixed(4)).format('%0.00')}</strong></p>
@@ -100,7 +101,7 @@ export default class StockIncome extends Component {
                         </div>
                         <div className="section-half">                    
                             {_.toArray(this.state).map(stateMetric => {
-                                const { metric, container, window, selectedPeriod } = stateMetric;
+                                const { metric, container, selectedPeriod } = stateMetric;
                                 return (
                                     <div key={metric}>
                                         <div className="layout-flex layout-flex--between">
@@ -110,7 +111,7 @@ export default class StockIncome extends Component {
                                                     const { label } = incomeStatement;
                                                     return (
                                                         <h5 
-                                                            onClick={() => this.onChangeChart({ metric, label, window, container })}
+                                                            onClick={() => this.onChangeChart({ metric, label, container })}
                                                             key={label}
                                                             style={((selectedPeriod == label) ? { color: colors[0] } : {color: colors[1] } )}
                                                             className="clickable marg-l-sm"
@@ -122,7 +123,7 @@ export default class StockIncome extends Component {
                                             </div> 
                                         </div>
                                         <div 
-                                            className={`${container.slice(1)} marg-b-sm`}
+                                            className={`${container} marg-b-sm`}
                                         />
                                     </div>
                                 )

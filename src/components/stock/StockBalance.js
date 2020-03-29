@@ -83,10 +83,10 @@ export default class StockBalance extends Component {
         return (
             <div>
                 {(balanceSheets[0].data && !_.isEmpty(this.state)) && (
-                    <div className="section layout-col-8 marg-c">
+                    <div className="section layout-col-10 marg-c">
                     <h4>BALANCE SHEET </h4>
                     <div className="layout-flex">
-                        <div className="section-half marg-r-sm">
+                        <div className="section-half marg-r-m">
                             <p>Cash, Short-Term Investmments: <strong>{numeral(parseFloat(cashEquivalents).toFixed(4)).format('$0,0.00')}</strong></p>
                             <p>Receivables: <strong>{numeral(parseFloat(receivables).toFixed(4)).format('$0,0.00')}</strong></p>
                             <p>Inventories: <strong>{numeral(parseFloat(inventories).toFixed(4)).format('$0,0.00')}</strong></p>
@@ -125,7 +125,7 @@ export default class StockBalance extends Component {
                                             </div> 
                                         </div>
                                         <div 
-                                            className={`${container.slice(1)} marg-b-sm`}
+                                            className={`${container} marg-b-sm`}
                                         />
                                     </div>
                                 )

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { draw_line_graph } from '../../services/graphics/stock';
 import { stock_history_window } from '../../services/helper/objReformat';
 
@@ -18,7 +17,7 @@ export default class StockMomentum extends Component {
 
     componentDidMount() {
         const { stockHistories, stockHistories50DMA, stockHistories200DMA } = this.props.stockInfo;
-        const stockPriceWindow = stock_history_window(stockHistories[2], "close");
+        const stockPriceWindow = stock_history_window(stockHistories[1], "close");
         const { label, metric } = stockPriceWindow;
 
         this.setState({
@@ -28,7 +27,7 @@ export default class StockMomentum extends Component {
                 { data: stockHistories50DMA[0].data, metric },
                 { data: stockHistories200DMA[0].data, metric }
             ], 
-            ".stock-momentum-chart-container", 800));
+            "stock-momentum-chart-container", 1055, 375));
     }
 
     onChangeChart(option) {
@@ -42,7 +41,7 @@ export default class StockMomentum extends Component {
                 { data: stockHistories50DMA.find(stockHistory => stockHistory.label === option).data, metric: "close" },
                 { data: stockHistories200DMA.find(stockHistory => stockHistory.label === option).data, metric: "close" }
             ], 
-            ".stock-momentum-chart-container", 800);
+            "stock-momentum-chart-container", 1055, 375);
         });
     }
 
@@ -51,7 +50,7 @@ export default class StockMomentum extends Component {
         const { selectedPeriod } = this.state;
 
         return (
-            <div className="section layout-col-8 marg-c">
+            <div className="section layout-col-10 marg-c">
                 <h4>MOMENTUM</h4>
                 <div className="layout-flex layout-flex--between">
                         <h5>50-DAY, 200-DAY MOVING AVERAGES</h5>

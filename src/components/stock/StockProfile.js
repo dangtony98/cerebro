@@ -9,7 +9,7 @@ export default class StockProfile extends Component {
     render() {
         const { sector, industry, description } = this.props.stockInfo.profile;
         return (
-            <div className="section layout-col-8 marg-c xa">
+            <div className="section layout-col-10 marg-c xa">
                 <h4>PROFILE</h4>
                 {(sector && industry) && (
                     <p>Sector: <strong>{sector} :: {industry}</strong></p>

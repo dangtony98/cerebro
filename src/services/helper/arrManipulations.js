@@ -67,7 +67,6 @@ const gRate = (arr, period) => {
 }
 
 const averageReturn = (arr) => {
-    // console.log(arr);
     let interval = Math.floor(arr.length / 250);
     let averageReturns = [];
     for (let i = 0; i < interval - 1; i++) {
@@ -77,7 +76,7 @@ const averageReturn = (arr) => {
             close: annualReturn * 100
         });
     }
-    console.log(averageReturns);
+    
     return averageReturns;
 }
 

@@ -1,53 +1,69 @@
 import React, { Component } from 'react';
 import BarLoader from 'react-spinners/BarLoader';
-import PortfolioQuote from '../portfolio/PortfolioQuote';
-import { getPortfolioInfoA } from '../../services/helper/info';
+import PortfolioOverview from '../portfolio/PortfolioOverview';
+import PortfolioStatistics from '../portfolio/PortfolioStatistics';
+import PortfolioTables from '../portfolio/PortfolioTables';
+import { get_portfolio_info } from '../../services/helper/info';
 
 export default class PortfolioPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            portfolio: [
-                { ticker: 'KO', shares: 1 },
-                { ticker: 'VOO', shares: 1 },
-                { ticker: 'BTG', shares: 5 }
-            ],
+            portfolio: { 
+                cash: 1255.53,
+                equities: [
+                    { ticker: 'STOR', shares: 1, averageCost: 17.52 },
+                    { ticker: 'BAC', shares: 1, averageCost: 19.42 },
+                    { ticker: 'DAL', shares: 8 , averageCost: 30.67 },
+                    { ticker: 'NYMT', shares: 20, averageCost: 1.63 },
+                    { ticker: 'BND', shares: 2, averageCost: 85.63 },
+                    { ticker: 'AJX', shares: 5, averageCost: 6.95 }
+                ]
+            },
             portfolioInfo: null,
             loading: true
         }
     }
 
     async componentDidMount() {
-        const { portfolio } = this.state;
-        let portfolioInfo = await getPortfolioInfoA(portfolio);
+        window.scrollTo(0, 0);
+        const { cash, equities } = this.state.portfolio;
+
+        let portfolioInfo = await get_portfolio_info(equities, cash);
         if (portfolioInfo) {
             this.setState({
                 ...this.state,
-                loading: false
+                loading: false,
+                portfolioInfo
             });
             console.log(portfolioInfo);
         }
     }
 
     render() {
-        const { loading } = this.state;
+        const { loading, portfolioInfo } = this.state;
         return (
             <div 
-                className="layout-col-8 marg-c marg-t-sm"
-                id="x"
+                className="section layout-col-10 marg-c marg-t-sm"
             >
-                <h3 id="y">CEREBRO</h3>
-                {/* {loading && (
-                    <div className="marg-t-sm">
-                        <BarLoader
-                            height={2}
-                            width={document.getElementById("y").offsetWidth}
-                            color={"rgb(52,152,219)"}
-                        />
+                <div className="layout-flex layout-flex--between marg-b-sm">
+                    <h3>CEREBRO INSIGHTS</h3>
+                    <h3>HELLO, TONY</h3>
+                </div>
+                {loading && (
+                    <BarLoader
+                        height={2}
+                        width={1135}
+                        color={"rgb(52,152,219)"}
+                    />
+                )}
+                {portfolioInfo && (
+                    <div>
+                        <PortfolioOverview portfolioInfo={portfolioInfo} />
+                        <PortfolioTables portfolioInfo={portfolioInfo} />
                     </div>
-                )} */}
-                <PortfolioQuote />
+                )}
             </div>
         );
     }
